@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>NOTE BACKEND</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            text-align: center;
+        }
+
+        #clock {
+            font-size: 48px;
+            font-weight: bold;
+            text-align: center;
+        }
+    </style>
+    <script>
+        function displayTime() {
+            const now = new Date();
+            const hours = now.getHours();
+            const minutes = now.getMinutes();
+            const seconds = now.getSeconds();
+            const timeString = hours + ":" + minutes + ":" + seconds;
+
+            const day = now.getDate();
+            const month = now.getMonth() + 1;
+            const year = now.getFullYear();
+            const dateString = day + "/" + month + "/" + year;
+
+            const clockElement = document.getElementById("clock");
+            clockElement.innerHTML = `${timeString} - ${dateString}`;
+        }
+
+        setInterval(displayTime, 1000);
+    </script>
+</head>
+
+<body>
+    <div class="container">
+        <h1>NOTE BACKEND</h1>
+        <div id="clock"></div>
+    </div>
+</body>
+
+</html>
