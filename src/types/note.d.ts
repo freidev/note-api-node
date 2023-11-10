@@ -4,12 +4,13 @@ export type category = {
 };
 
 export interface Note {
-	id: number;
+	id: string;
 	title: string;
 	content: string;
 	createdAt: string;
 	updatedAt: string;
 	category: category;
+	deleted: boolean;
 }
 
-export type NewNote = Omit<Note, 'id' | 'createdAt' | 'updatedAt' | 'category'>;
+export type NewNote = Pick<Note, 'title' | 'content'>;

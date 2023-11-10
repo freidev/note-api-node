@@ -3,8 +3,9 @@ import * as service from '../services/noteServices';
 
 const router = express.Router();
 
-router.get('/', (_req, res) => {
-	res.send(service.getNotes());
+router.get('/', async (_req, res) => {
+	const notes = await service.getNotes();
+	res.send(notes);
 });
 
 router.post('/', (req, res) => {
@@ -17,9 +18,9 @@ router.post('/', (req, res) => {
 	res.status(201).send(createdNote);
 });
 
-router.get('/:id', (req, res) => {
-	const id = Number(req.params.id);
-	const note = service.getNoteById(id);
+router.get('/:id', async (req, res) => {
+	const id = req.params.id;
+	const note = await service.getNoteById(id);
 	if (!note) {
 		res.status(404).send({ message: 'Note not found' });
 		return;
@@ -28,24 +29,29 @@ router.get('/:id', (req, res) => {
 });
 
 router.put('/:id', (req, res) => {
-	const id = Number(req.params.id);
+	const id = req.params.id;
 	const { title, content } = req.body;
-	const updated = service.updateNote(id, content, title);
-	if (!updated) {
-		res.status(404).send({ message: 'Note not found' });
-		return;
+	if (!title && !content) {
+		res.status(400).send({ message: 'Title or content is required' });
 	}
-	res.send({ message: 'Note updated' });
+	service
+		.updateNote(id, content, title)
+		.then(() => {
+			res.send({ message: 'Note updated' });
+		})
+		.catch((error) => {
+			res.status(404).send({ message: error });
+		});
 });
 
-router.delete('/:id', (req, res) => {
-	const id = Number(req.params.id);
-	const deleted = service.deleteNote(id);
-	if (!deleted) {
-		res.status(404).send({ message: 'Note not found' });
-		return;
+router.delete('/:id', async (req, res) => {
+	const id = req.params.id;
+	try {
+		await service.deleteNote(id);
+		res.status(204).send({ message: 'Note deleted' });
+	} catch (error) {
+		res.status(404).send({ message: error });
 	}
-	res.status(204).send({ message: 'Note deleted' });
 });
 
 export { router };

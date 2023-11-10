@@ -1,47 +1,81 @@
-import noteData from '../data/noteData.json';
+import firebase from 'firebase/compat/app';
+import 'firebase/compat/firestore';
+
+// import noteData from '../data/noteData.json';
 import { NewNote, Note } from '../types/note';
 
-const notes: Note[] = noteData;
-export const getNotes = () => notes;
+export const getNotes = async () => {
+	try {
+		const db = firebase.firestore();
+		const notes: Note[] = [];
+		const snapshot = await db
+			.collection('notes')
+			.where('deleted', '==', false)
+			.get();
+		snapshot.forEach((doc) => {
+			const note = doc.data() as Note;
+			notes.push(note);
+		});
+		return notes;
+	} catch (error) {
+		throw `${error}`;
+	}
+};
 
-export const addNote = (note: NewNote) => {
+export const addNote = async (note: NewNote) => {
 	const newNote: Note = {
-		id: notes.length + 1,
+		id: '',
 		createdAt: new Date().toISOString(),
-		...note,
 		updatedAt: new Date().toISOString(),
 		category: {
 			id: 1,
 			name: 'Category 1',
 		},
+		...note,
+		deleted: false,
 	};
-
-	notes.push(newNote);
-};
-
-export const deleteNote = (id: number): boolean => {
-	const index = notes.findIndex((note) => note.id === id);
-	if (index !== -1) {
-		notes.splice(index, 1);
-		return true;
+	try {
+		const db = firebase.firestore();
+		const doc = await db.collection('notes').add(newNote);
+		await doc.update({ id: doc.id });
+	} catch (error) {
+		throw `${error}`;
 	}
-	return false;
 };
 
-export const updateNote = (id: number, content: string, title: string) => {
-	const index = notes.findIndex((note) => note.id === id);
-	if (index !== -1) {
-		notes[index].content = content;
-		notes[index].title = title;
-		notes[index].updatedAt = new Date().toISOString();
-		return true;
+export const deleteNote = async (id: string) => {
+	try {
+		const db = firebase.firestore();
+		await db
+			.collection('notes')
+			.doc(id)
+			.update({ deleted: true, updatedAt: new Date().toISOString() });
+	} catch (error) {
+		console.log(error);
+		throw `${error}`;
 	}
-	return false;
 };
 
-export const getNoteById = (id: number): Note | undefined => {
-	const note = notes.find((note) => note.id === id);
-	return note;
+export const updateNote = async (
+	id: string,
+	content: string,
+	title: string,
+) => {
+	const db = firebase.firestore();
+	await db.collection('notes').doc(id).update({
+		content,
+		title,
+		updatedAt: new Date().toISOString(),
+	});
 };
 
-// export const updateNote = (id: number, note: string) => null
+export const getNoteById = async (id: string): Promise<Note | undefined> => {
+	const db = firebase.firestore();
+	const note = db.collection('notes').doc(id);
+	return note.get().then((doc) => {
+		if (doc.exists) return doc.data() as Note;
+		return undefined;
+	});
+};
+
+// // export const updateNote = (id: number, note: string) => null
