@@ -8,13 +8,14 @@ router.get('/', async (_req, res) => {
 	res.send(notes);
 });
 
-router.post('/', (req, res) => {
+router.post('/', async (req, res) => {
+	console.log(req.body);
 	const { title, content } = req.body;
 	if (!title || !content) {
 		res.status(400).send({ message: 'Title and content are required' });
 		return;
 	}
-	const createdNote = service.addNote({ title, content });
+	const createdNote = await service.addNote({ title, content });
 	res.status(201).send(createdNote);
 });
 
@@ -37,7 +38,7 @@ router.put('/:id', (req, res) => {
 	service
 		.updateNote(id, content, title)
 		.then(() => {
-			res.send({ message: 'Note updated' });
+			res.send({ message: 'Note updated', id, title, content });
 		})
 		.catch((error) => {
 			res.status(404).send({ message: error });

@@ -22,7 +22,7 @@ export const getNotes = async () => {
 	}
 };
 
-export const addNote = async (note: NewNote) => {
+export const addNote = async (note: NewNote): Promise<Note> => {
 	const newNote: Note = {
 		id: '',
 		createdAt: new Date().toISOString(),
@@ -38,6 +38,7 @@ export const addNote = async (note: NewNote) => {
 		const db = firebase.firestore();
 		const doc = await db.collection('notes').add(newNote);
 		await doc.update({ id: doc.id });
+		return { ...newNote, id: doc.id };
 	} catch (error) {
 		throw `${error}`;
 	}
@@ -60,13 +61,25 @@ export const updateNote = async (
 	id: string,
 	content: string,
 	title: string,
-) => {
+): Promise<Note> => {
 	const db = firebase.firestore();
 	await db.collection('notes').doc(id).update({
 		content,
 		title,
 		updatedAt: new Date().toISOString(),
 	});
+	return {
+		id,
+		title,
+		content,
+		createdAt: new Date().toISOString(),
+		updatedAt: new Date().toISOString(),
+		category: {
+			id: 1,
+			name: 'Category 1',
+		},
+		deleted: false,
+	};
 };
 
 export const getNoteById = async (id: string): Promise<Note | undefined> => {
