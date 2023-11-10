@@ -3,14 +3,18 @@
 	"organizeImports": {
 		"enabled": true
 	},
+	"formatter": {
+		"indentStyle": "tab",
+		"indentSize": 2,
+		"lineWidth": 80,
+		"ignore": ["build", "node_modules"]
+	},
 	"linter": {
 		"enabled": true,
 		"rules": {
 			"recommended": true
 		},
-		"ignore": [
-			"build"
-		]
+		"ignore": ["build", "node_modules"]
 	},
 	"javascript": {
 		"formatter": {
