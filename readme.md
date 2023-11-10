@@ -1,6 +1,6 @@
-# Simple Notes CRUD Application
+# Simple Notes CRUD Application with Firebase
 
-This is a simple CRUD (Create, Read, Update, Delete) application for managing notes, built with Node.js and TypeScript.
+This is a simple CRUD (Create, Read, Update, Delete) application for managing notes, built with Node.js, TypeScript, and Firebase as the database.
 
 ## Getting Started
 
@@ -10,6 +10,7 @@ These instructions will get you a copy of the project up and running on your loc
 
 - Node.js
 - TypeScript
+- Firebase account
 
 ### Installation
 
@@ -25,11 +26,15 @@ These instructions will get you a copy of the project up and running on your loc
     ```
     npm install
     ```
-4. Compile TypeScript to JavaScript
+4. Set up Firebase
+    - Create a Firebase project in the Firebase console.
+    - Generate a private key file for your service account.
+    - Place the service account key file in your project directory and rename it to `firebase-service-account.json`.
+5. Compile TypeScript to JavaScript
     ```
     tsc
     ```
-5. Start the server
+6. Start the server
     ```
     npm start
     ```
@@ -38,11 +43,11 @@ These instructions will get you a copy of the project up and running on your loc
 
 This application provides the following endpoints:
 
-- `GET /notes`: Fetch all notes
-- `POST /notes`: Create a new note
-- `GET /notes/:id`: Fetch a single note by ID
-- `PUT /notes/:id`: Update a note by ID
-- `DELETE /notes/:id`: Delete a note by ID
+- `GET /notes`: Fetch all notes from Firebase
+- `POST /notes`: Create a new note in Firebase
+- `GET /notes/:id`: Fetch a single note by ID from Firebase
+- `PUT /notes/:id`: Update a note by ID in Firebase
+- `DELETE /notes/:id`: Delete a note by ID from Firebase
 
 ## Contributing
 
