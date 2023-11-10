@@ -1,6 +1,10 @@
 import express, { Request, Response } from 'express';
 import { router } from './routes/notes';
 
+import firebase from 'firebase/compat/app';
+import firebaseConfig from './firebaseConfig';
+firebase.initializeApp(firebaseConfig);
+
 const app = express();
 app.use(express.json());
 const PORT = 3000;
@@ -12,7 +16,7 @@ app.get('/', (_req: Request, res: Response) => {
 app.use('/api/notes', router);
 
 app.use((req, res) => {
-	res.status(404).send({ message: `route {{${req.path}}} not found` });
+	res.status(404).send({ message: `route [${req.path}] not found` });
 });
 
 app.listen(PORT, () => {

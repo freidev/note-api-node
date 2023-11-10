@@ -8,6 +8,8 @@
     "tsc": "tsc",
     "start": "node build/index.js",
     "lint": "ts-standard",
+    "format": "rome format .",
+    "format:fix": "rome format . --write",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
@@ -19,7 +21,9 @@
   "author": "Freilyn Bernabe",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.18.2"
+    "@types/firebase": "^3.2.1",
+    "express": "^4.18.2",
+    "firebase": "^10.6.0"
   },
   "devDependencies": {
     "@types/express": "^4.17.21",
